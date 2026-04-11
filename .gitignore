@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+mobile/node_modules/
+backend/node_modules/
+
+# Environment files — NEVER commit these
+.env
+backend/.env
+mobile/.env
+
+# Build outputs
+mobile/android/app/build/
+mobile/android/build/
+mobile/.bundle/
+mobile/android/.gradle/
+
+# iOS
+mobile/ios/build/
+mobile/ios/Pods/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/settings.json
+
+# React Native
+mobile/__tests__/

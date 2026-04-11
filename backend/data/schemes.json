@@ -1,0 +1,134 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": "PM-KISAN",
+    "fullName": "Pradhan Mantri Kisan Samman Nidhi",
+    "amount": "₹6,000 har saal",
+    "cashAmount": 6000,
+    "tag": "Seedha Transfer",
+    "emoji": "💰",
+    "color": "#4a7c4a",
+    "desc": "Seedha aapke bank mein 3 kistoon mein paisa milta hai. Koi bhi kharcha nahi.",
+    "documents": ["Aadhar Card", "Bank Passbook", "Khasra ya Khatauni"],
+    "applyAt": "CSC Centre ya pmkisan.gov.in",
+    "helpline": "155261",
+    "eligibility": {
+      "maxLandAcres": 5,
+      "requiresBankAccount": true
+    }
+  },
+  {
+    "id": "pmfby",
+    "name": "PMFBY",
+    "fullName": "Pradhan Mantri Fasal Bima Yojana",
+    "amount": "Fasal kharab ho to muavza",
+    "cashAmount": 0,
+    "tag": "Bima",
+    "emoji": "🛡️",
+    "color": "#2d7a5a",
+    "desc": "Baarish, sookha ya toofan se fasal kharab ho to sarkar paisa deti hai.",
+    "documents": ["Aadhar", "Bank Account", "Zameen ka praman", "Boi gayi fasal ka vivran"],
+    "applyAt": "Nazdiki bank ya bima company",
+    "helpline": "1800-200-7710",
+    "eligibility": {
+      "requiresBankAccount": true
+    }
+  },
+  {
+    "id": "kcc",
+    "name": "Kisan Credit Card",
+    "fullName": "Kisan Credit Card Yojana",
+    "amount": "₹3 lakh tak — sirf 4% byaaj",
+    "cashAmount": 0,
+    "tag": "Loan",
+    "emoji": "💳",
+    "color": "#4a5a7c",
+    "desc": "Khad, beej aur dawai kharidne ke liye sasta loan. Bank se seedha milta hai.",
+    "documents": ["Aadhar", "Zameen ke kagaz", "Passport Photo", "Bank Statement"],
+    "applyAt": "Nazdiki bank mein jaiye",
+    "helpline": "1800-11-0001",
+    "eligibility": {
+      "requiresBankAccount": true,
+      "minLandAcres": 0.5
+    }
+  },
+  {
+    "id": "pm-kusum",
+    "name": "PM-KUSUM",
+    "fullName": "Pradhan Mantri Kisan Urja Suraksha evam Utthan Mahabhiyan",
+    "amount": "Solar pump pe 90% choot",
+    "cashAmount": 0,
+    "tag": "Subsidy",
+    "emoji": "☀️",
+    "color": "#7c6a2d",
+    "desc": "Khet ki sinchai ke liye solar pump lagao — sarkar 90% paisa degi.",
+    "documents": ["Aadhar", "Zameen ka praman", "Bank Account", "Photo"],
+    "applyAt": "State agriculture department",
+    "helpline": "1800-180-3333",
+    "eligibility": {}
+  },
+  {
+    "id": "soil-health-card",
+    "name": "Soil Health Card",
+    "fullName": "Mitti Swasthya Card Yojana",
+    "amount": "Free mitti test + salah",
+    "cashAmount": 0,
+    "tag": "Free Service",
+    "emoji": "🌱",
+    "color": "#5a7a2a",
+    "desc": "Aapki mitti ki jaanch free mein hogi aur bataya jaayega kya dalna hai.",
+    "documents": ["Aadhar", "Zameen ka vivran"],
+    "applyAt": "Nazdiki Krishi Vigyan Kendra",
+    "helpline": "1800-180-1551",
+    "eligibility": {}
+  },
+  {
+    "id": "pmksy",
+    "name": "PMKSY",
+    "fullName": "Pradhan Mantri Krishi Sinchai Yojana",
+    "amount": "Drip irrigation pe 55% subsidy",
+    "cashAmount": 0,
+    "tag": "Subsidy",
+    "emoji": "💧",
+    "color": "#2a6a8a",
+    "desc": "Drip ya sprinkler irrigation system lagao — sarkar 55% tak subsidy degi.",
+    "documents": ["Aadhar", "Zameen ke kagaz", "Bank Account"],
+    "applyAt": "District agriculture office",
+    "helpline": "1800-180-1551",
+    "eligibility": {
+      "minLandAcres": 0.5
+    }
+  },
+  {
+    "id": "e-nam",
+    "name": "eNAM",
+    "fullName": "National Agriculture Market",
+    "amount": "Online mandi — better price",
+    "cashAmount": 0,
+    "tag": "Market Access",
+    "emoji": "🏪",
+    "color": "#6a4a7c",
+    "desc": "Online platform pe apni fasal becho — zyada mandion tak pahuncho, better rate pao.",
+    "documents": ["Aadhar", "Bank Account", "Mobile Number"],
+    "applyAt": "enam.gov.in ya nazdiki mandi",
+    "helpline": "1800-270-0224",
+    "eligibility": {
+      "requiresBankAccount": true
+    }
+  },
+  {
+    "id": "rkvy",
+    "name": "RKVY Training",
+    "fullName": "Rashtriya Krishi Vikas Yojana",
+    "amount": "Free farming training",
+    "cashAmount": 0,
+    "tag": "Training",
+    "emoji": "📚",
+    "color": "#7a5a2a",
+    "desc": "Modern kheti ki free training milti hai — naye tarike seekho, yield badhao.",
+    "documents": ["Aadhar", "Photo"],
+    "applyAt": "Krishi Vigyan Kendra",
+    "helpline": "1800-180-1551",
+    "eligibility": {}
+  }
+]
