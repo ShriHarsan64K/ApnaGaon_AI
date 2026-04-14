@@ -1,0 +1,102 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-04-11",
+  "note": "Offline mock prices — approximate market rates",
+  "states": {
+    "Maharashtra": {
+      "crops": {
+        "Tomato": [
+          { "mandi": "Wardha APMC", "district": "Wardha", "price": 1100, "minPrice": 900, "maxPrice": 1300, "lat": 20.7, "lng": 78.6 },
+          { "mandi": "Nagpur APMC", "district": "Nagpur", "price": 1000, "minPrice": 800, "maxPrice": 1200, "lat": 21.1, "lng": 79.0 },
+          { "mandi": "Amravati APMC", "district": "Amravati", "price": 950, "minPrice": 750, "maxPrice": 1150, "lat": 20.9, "lng": 77.7 },
+          { "mandi": "Yavatmal APMC", "district": "Yavatmal", "price": 850, "minPrice": 650, "maxPrice": 1050, "lat": 20.3, "lng": 78.1 },
+          { "mandi": "Chandrapur APMC", "district": "Chandrapur", "price": 900, "minPrice": 700, "maxPrice": 1100, "lat": 19.9, "lng": 79.2 }
+        ],
+        "Onion": [
+          { "mandi": "Nashik APMC", "district": "Nashik", "price": 1500, "minPrice": 1200, "maxPrice": 1800, "lat": 19.9, "lng": 73.7 },
+          { "mandi": "Lasalgaon APMC", "district": "Nashik", "price": 1450, "minPrice": 1150, "maxPrice": 1750, "lat": 20.1, "lng": 74.0 },
+          { "mandi": "Pune APMC", "district": "Pune", "price": 1600, "minPrice": 1300, "maxPrice": 1900, "lat": 18.5, "lng": 73.8 },
+          { "mandi": "Mumbai APMC", "district": "Mumbai", "price": 1700, "minPrice": 1400, "maxPrice": 2000, "lat": 19.0, "lng": 72.8 },
+          { "mandi": "Solapur APMC", "district": "Solapur", "price": 1350, "minPrice": 1050, "maxPrice": 1650, "lat": 17.6, "lng": 75.9 }
+        ],
+        "Wheat": [
+          { "mandi": "Wardha APMC", "district": "Wardha", "price": 2200, "minPrice": 2100, "maxPrice": 2350, "lat": 20.7, "lng": 78.6 },
+          { "mandi": "Nagpur APMC", "district": "Nagpur", "price": 2150, "minPrice": 2050, "maxPrice": 2300, "lat": 21.1, "lng": 79.0 },
+          { "mandi": "Amravati APMC", "district": "Amravati", "price": 2250, "minPrice": 2150, "maxPrice": 2400, "lat": 20.9, "lng": 77.7 },
+          { "mandi": "Yavatmal APMC", "district": "Yavatmal", "price": 2100, "minPrice": 2000, "maxPrice": 2250, "lat": 20.3, "lng": 78.1 },
+          { "mandi": "Chandrapur APMC", "district": "Chandrapur", "price": 2180, "minPrice": 2080, "maxPrice": 2280, "lat": 19.9, "lng": 79.2 }
+        ],
+        "Cotton": [
+          { "mandi": "Wardha APMC", "district": "Wardha", "price": 6800, "minPrice": 6500, "maxPrice": 7100, "lat": 20.7, "lng": 78.6 },
+          { "mandi": "Yavatmal APMC", "district": "Yavatmal", "price": 6750, "minPrice": 6450, "maxPrice": 7050, "lat": 20.3, "lng": 78.1 },
+          { "mandi": "Nagpur APMC", "district": "Nagpur", "price": 6900, "minPrice": 6600, "maxPrice": 7200, "lat": 21.1, "lng": 79.0 },
+          { "mandi": "Amravati APMC", "district": "Amravati", "price": 6700, "minPrice": 6400, "maxPrice": 7000, "lat": 20.9, "lng": 77.7 },
+          { "mandi": "Chandrapur APMC", "district": "Chandrapur", "price": 6650, "minPrice": 6350, "maxPrice": 6950, "lat": 19.9, "lng": 79.2 }
+        ],
+        "Soybean": [
+          { "mandi": "Wardha APMC", "district": "Wardha", "price": 4200, "minPrice": 3900, "maxPrice": 4500, "lat": 20.7, "lng": 78.6 },
+          { "mandi": "Latur APMC", "district": "Latur", "price": 4150, "minPrice": 3850, "maxPrice": 4450, "lat": 18.4, "lng": 76.5 },
+          { "mandi": "Nagpur APMC", "district": "Nagpur", "price": 4300, "minPrice": 4000, "maxPrice": 4600, "lat": 21.1, "lng": 79.0 },
+          { "mandi": "Amravati APMC", "district": "Amravati", "price": 4100, "minPrice": 3800, "maxPrice": 4400, "lat": 20.9, "lng": 77.7 },
+          { "mandi": "Aurangabad APMC", "district": "Aurangabad", "price": 4250, "minPrice": 3950, "maxPrice": 4550, "lat": 19.8, "lng": 75.3 }
+        ]
+      }
+    },
+    "Bihar": {
+      "crops": {
+        "Wheat": [
+          { "mandi": "Patna APMC", "district": "Patna", "price": 2300, "minPrice": 2150, "maxPrice": 2450, "lat": 25.5, "lng": 85.1 },
+          { "mandi": "Muzaffarpur APMC", "district": "Muzaffarpur", "price": 2250, "minPrice": 2100, "maxPrice": 2400, "lat": 26.1, "lng": 85.3 },
+          { "mandi": "Gaya APMC", "district": "Gaya", "price": 2200, "minPrice": 2050, "maxPrice": 2350, "lat": 24.7, "lng": 84.9 }
+        ],
+        "Rice": [
+          { "mandi": "Patna APMC", "district": "Patna", "price": 1950, "minPrice": 1800, "maxPrice": 2100, "lat": 25.5, "lng": 85.1 },
+          { "mandi": "Bhagalpur APMC", "district": "Bhagalpur", "price": 1900, "minPrice": 1750, "maxPrice": 2050, "lat": 25.2, "lng": 87.0 },
+          { "mandi": "Gaya APMC", "district": "Gaya", "price": 1870, "minPrice": 1720, "maxPrice": 2020, "lat": 24.7, "lng": 84.9 }
+        ]
+      }
+    },
+    "UP": {
+      "crops": {
+        "Wheat": [
+          { "mandi": "Lucknow APMC", "district": "Lucknow", "price": 2280, "minPrice": 2130, "maxPrice": 2430, "lat": 26.8, "lng": 80.9 },
+          { "mandi": "Kanpur APMC", "district": "Kanpur", "price": 2260, "minPrice": 2110, "maxPrice": 2410, "lat": 26.4, "lng": 80.3 },
+          { "mandi": "Agra APMC", "district": "Agra", "price": 2300, "minPrice": 2150, "maxPrice": 2450, "lat": 27.1, "lng": 78.0 }
+        ],
+        "Onion": [
+          { "mandi": "Lucknow APMC", "district": "Lucknow", "price": 1400, "minPrice": 1100, "maxPrice": 1700, "lat": 26.8, "lng": 80.9 },
+          { "mandi": "Agra APMC", "district": "Agra", "price": 1350, "minPrice": 1050, "maxPrice": 1650, "lat": 27.1, "lng": 78.0 },
+          { "mandi": "Varanasi APMC", "district": "Varanasi", "price": 1450, "minPrice": 1150, "maxPrice": 1750, "lat": 25.3, "lng": 82.9 }
+        ]
+      }
+    },
+    "MP": {
+      "crops": {
+        "Soybean": [
+          { "mandi": "Indore APMC", "district": "Indore", "price": 4400, "minPrice": 4100, "maxPrice": 4700, "lat": 22.7, "lng": 75.8 },
+          { "mandi": "Ujjain APMC", "district": "Ujjain", "price": 4350, "minPrice": 4050, "maxPrice": 4650, "lat": 23.1, "lng": 75.7 },
+          { "mandi": "Bhopal APMC", "district": "Bhopal", "price": 4300, "minPrice": 4000, "maxPrice": 4600, "lat": 23.2, "lng": 77.4 }
+        ],
+        "Wheat": [
+          { "mandi": "Indore APMC", "district": "Indore", "price": 2350, "minPrice": 2200, "maxPrice": 2500, "lat": 22.7, "lng": 75.8 },
+          { "mandi": "Bhopal APMC", "district": "Bhopal", "price": 2300, "minPrice": 2150, "maxPrice": 2450, "lat": 23.2, "lng": 77.4 },
+          { "mandi": "Jabalpur APMC", "district": "Jabalpur", "price": 2280, "minPrice": 2130, "maxPrice": 2430, "lat": 23.1, "lng": 79.9 }
+        ]
+      }
+    },
+    "Rajasthan": {
+      "crops": {
+        "Onion": [
+          { "mandi": "Jaipur APMC", "district": "Jaipur", "price": 1300, "minPrice": 1000, "maxPrice": 1600, "lat": 26.9, "lng": 75.7 },
+          { "mandi": "Alwar APMC", "district": "Alwar", "price": 1250, "minPrice": 950, "maxPrice": 1550, "lat": 27.5, "lng": 76.5 },
+          { "mandi": "Kota APMC", "district": "Kota", "price": 1350, "minPrice": 1050, "maxPrice": 1650, "lat": 25.1, "lng": 75.8 }
+        ],
+        "Wheat": [
+          { "mandi": "Jaipur APMC", "district": "Jaipur", "price": 2180, "minPrice": 2030, "maxPrice": 2330, "lat": 26.9, "lng": 75.7 },
+          { "mandi": "Jodhpur APMC", "district": "Jodhpur", "price": 2150, "minPrice": 2000, "maxPrice": 2300, "lat": 26.2, "lng": 73.0 },
+          { "mandi": "Bikaner APMC", "district": "Bikaner", "price": 2120, "minPrice": 1970, "maxPrice": 2270, "lat": 28.0, "lng": 73.3 }
+        ]
+      }
+    }
+  }
+}

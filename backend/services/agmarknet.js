@@ -1,104 +1,127 @@
 const axios = require('axios')
 const cache = require('./cache')
+const offlineDb = require('../data/mandis_offline.json')
 
 const AGMARKNET_API_KEY = process.env.AGMARKNET_API_KEY
 const BASE_URL = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070'
 
-async function getMandiPrices(crop, state) {
-  const cacheKey = `mandi_${crop}_${state}`.toLowerCase()
-
-  const cached = cache.mandi.get(cacheKey)
-  if (cached) {
-    console.log('Mandi prices from cache')
-    return { data: cached, fromCache: true }
-  }
-
-  try {
-    const response = await axios.get(BASE_URL, {
-      params: {
-        'api-key': AGMARKNET_API_KEY,
-        format: 'json',
-        limit: 20,
-        'filters[commodity]': crop,
-        'filters[state]': state,
-      },
-      timeout: 8000
-    })
-
-    const records = response.data.records || []
-    const parsed = records.map(r => ({
-      mandi: r.market || r.Market,
-      district: r.district || r.District,
-      state: r.state || r.State,
-      commodity: r.commodity || r.Commodity,
-      price: parseFloat(r.modal_price || r.Modal_Price || 0),
-      minPrice: parseFloat(r.min_price || r.Min_Price || 0),
-      maxPrice: parseFloat(r.max_price || r.Max_Price || 0),
-      date: r.arrival_date || r.Arrival_Date,
-    })).filter(r => r.price > 0)
-
-    cache.mandi.set(cacheKey, parsed)
-    return { data: parsed, fromCache: false }
-
-  } catch (err) {
-    console.log('AgMarkNet API failed:', err.message)
-    return { data: getMockPrices(crop, state), fromCache: false, mock: true }
-  }
+// Crop name normalization — maps common names to database keys
+const CROP_NAME_MAP = {
+  'tamatar': 'Tomato', 'tomato': 'Tomato',
+  'pyaaz': 'Onion', 'onion': 'Onion', 'pyaz': 'Onion',
+  'gehun': 'Wheat', 'wheat': 'Wheat', 'gehu': 'Wheat',
+  'chawal': 'Rice', 'rice': 'Rice', 'paddy': 'Rice', 'dhan': 'Rice',
+  'kapas': 'Cotton', 'cotton': 'Cotton',
+  'soyabean': 'Soybean', 'soybean': 'Soybean', 'soya': 'Soybean',
 }
 
-function getMockPrices(crop, state) {
-  const mockData = {
-    tomato: [
-      { mandi: 'Wardha', district: 'Wardha', price: 1100, minPrice: 900, maxPrice: 1300 },
-      { mandi: 'Nagpur', district: 'Nagpur', price: 800, minPrice: 700, maxPrice: 1000 },
-      { mandi: 'Amravati', district: 'Amravati', price: 950, minPrice: 800, maxPrice: 1100 },
-      { mandi: 'Yavatmal', district: 'Yavatmal', price: 700, minPrice: 600, maxPrice: 850 },
-      { mandi: 'Chandrapur', district: 'Chandrapur', price: 1000, minPrice: 850, maxPrice: 1150 },
-    ],
-    wheat: [
-      { mandi: 'Wardha', district: 'Wardha', price: 2200, minPrice: 2100, maxPrice: 2300 },
-      { mandi: 'Nagpur', district: 'Nagpur', price: 2150, minPrice: 2050, maxPrice: 2250 },
-      { mandi: 'Amravati', district: 'Amravati', price: 2250, minPrice: 2150, maxPrice: 2350 },
-    ],
-    onion: [
-      { mandi: 'Nashik', district: 'Nashik', price: 1500, minPrice: 1200, maxPrice: 1800 },
-      { mandi: 'Pune', district: 'Pune', price: 1400, minPrice: 1100, maxPrice: 1700 },
-      { mandi: 'Mumbai', district: 'Mumbai', price: 1600, minPrice: 1300, maxPrice: 1900 },
-    ]
+function normalizeCropName(crop) {
+  const lower = crop.toLowerCase().trim()
+  return CROP_NAME_MAP[lower] || crop.charAt(0).toUpperCase() + crop.slice(1).toLowerCase()
+}
+
+// ── LIVE API FETCH ──
+async function fetchLivePrices(crop, state) {
+  const response = await axios.get(BASE_URL, {
+    params: {
+      'api-key': AGMARKNET_API_KEY,
+      format: 'json',
+      limit: 20,
+      'filters[commodity]': normalizeCropName(crop),
+      'filters[state]': state,
+    },
+    timeout: 8000
+  })
+
+  const records = response.data.records || []
+  return records.map(r => ({
+    mandi: r.market || r.Market,
+    district: r.district || r.District,
+    state: r.state || r.State,
+    commodity: r.commodity || r.Commodity,
+    price: parseFloat(r.modal_price || r.Modal_Price || 0),
+    minPrice: parseFloat(r.min_price || r.Min_Price || 0),
+    maxPrice: parseFloat(r.max_price || r.Max_Price || 0),
+    date: r.arrival_date || r.Arrival_Date,
+    source: 'live',
+  })).filter(r => r.price > 0)
+}
+
+// ── OFFLINE DATABASE FETCH ──
+function fetchOfflinePrices(crop, state) {
+  const normalizedCrop = normalizeCropName(crop)
+  const normalizedState = state || 'Maharashtra'
+
+  // Try exact state match first
+  const stateData = offlineDb.states[normalizedState]
+  if (stateData && stateData.crops[normalizedCrop]) {
+    return stateData.crops[normalizedCrop].map(m => ({
+      ...m,
+      commodity: normalizedCrop,
+      state: normalizedState,
+      date: 'Cached data',
+      source: 'offline',
+    }))
   }
 
-  const cropLower = crop.toLowerCase()
-  for (const [key, data] of Object.entries(mockData)) {
-    if (cropLower.includes(key)) return data
+  // Try Maharashtra as fallback (most complete dataset)
+  const fallbackState = offlineDb.states['Maharashtra']
+  if (fallbackState && fallbackState.crops[normalizedCrop]) {
+    return fallbackState.crops[normalizedCrop].map(m => ({
+      ...m,
+      commodity: normalizedCrop,
+      state: 'Maharashtra (approximate)',
+      date: 'Offline estimate',
+      source: 'offline_fallback',
+    }))
   }
 
+  // Last resort — generic fallback
   return [
-    { mandi: 'Local Mandi', district: state, price: 1000, minPrice: 800, maxPrice: 1200 },
+    { mandi: 'Local Mandi', district: normalizedState, state: normalizedState, price: 1000, minPrice: 800, maxPrice: 1200, commodity: normalizedCrop, date: 'Estimate', source: 'mock' }
   ]
 }
 
-function calculateNetEarning(price, distanceKm, quantityKg) {
-  const transportCost = Math.round(distanceKm * 2)
-  const grossEarning = Math.round((price / 100) * quantityKg)
-  const netEarning = Math.round(grossEarning - transportCost)
-  return { grossEarning, transportCost, netEarning }
+// ── MAIN FUNCTION ──
+async function getMandiPrices(crop, state, forceOffline = false) {
+  const cacheKey = `mandi_${crop}_${state}`.toLowerCase().replace(/\s/g, '_')
+
+  // Check cache first
+  const cached = cache.mandi.get(cacheKey)
+  if (cached) {
+    console.log('Mandi prices from cache')
+    return { data: cached, fromCache: true, source: 'cache' }
+  }
+
+  // Force offline mode (e.g. when device has no internet)
+  if (forceOffline) {
+    console.log('Using offline mandi database')
+    const data = fetchOfflinePrices(crop, state)
+    return { data, fromCache: false, source: 'offline', isOffline: true }
+  }
+
+  // Try live API
+  try {
+    console.log('Fetching live mandi prices...')
+    const data = await fetchLivePrices(crop, state)
+    if (data.length > 0) {
+      cache.mandi.set(cacheKey, data)
+      return { data, fromCache: false, source: 'live', isOffline: false }
+    }
+    throw new Error('No records returned')
+  } catch (err) {
+    console.log('AgMarkNet API failed:', err.message, '— using offline database')
+    const data = fetchOfflinePrices(crop, state)
+    return { data, fromCache: false, source: 'offline', isOffline: true }
+  }
 }
 
+// ── DISTANCE & TRANSPORT ──
 const MANDI_DISTANCES = {
-  wardha: 22,
-  nagpur: 75,
-  amravati: 65,
-  yavatmal: 55,
-  chandrapur: 105,
-  nashik: 320,
-  pune: 550,
-  mumbai: 780,
-  panvel: 800,
-  satara: 450,
-  kolhapur: 600,
-  solapur: 350,
-  jalgaon: 280,
-  ahmednagar: 380,
+  wardha: 22, nagpur: 75, amravati: 65, yavatmal: 55, chandrapur: 105,
+  nashik: 320, pune: 550, mumbai: 780, panvel: 800, latur: 300,
+  aurangabad: 250, solapur: 350, indore: 400, bhopal: 450, jabalpur: 500,
+  patna: 800, lucknow: 700, jaipur: 600, agra: 650,
 }
 
 function getDistance(mandiName) {
@@ -109,4 +132,11 @@ function getDistance(mandiName) {
   return 50
 }
 
-module.exports = { getMandiPrices, calculateNetEarning, getDistance }
+function calculateNetEarning(price, distanceKm, quantityKg) {
+  const transportCost = Math.round(distanceKm * 2)
+  const grossEarning = Math.round((price / 100) * quantityKg)
+  const netEarning = Math.round(grossEarning - transportCost)
+  return { grossEarning, transportCost, netEarning }
+}
+
+module.exports = { getMandiPrices, calculateNetEarning, getDistance, normalizeCropName }

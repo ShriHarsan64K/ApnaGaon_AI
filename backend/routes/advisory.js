@@ -2,19 +2,27 @@ const express = require('express')
 const router = express.Router()
 const { callNvidia } = require('../services/nvidia')
 const { callOpenAI } = require('../services/openai')
-const { getRuleEngineResponse } = require('../services/ruleEngine')
+const { getRuleEngineResponse, normalizeInput, extractParameters } = require('../services/ruleEngine')
 const { getWeather } = require('../services/imd')
 
 // POST /api/advisory
 router.post('/', async (req, res, next) => {
   try {
-    const { prompt, crop, problem, location, weather, language } = req.body
+    const { prompt, crop, problem, location, weather, language, inputType } = req.body
 
     if (!prompt && !problem) {
       return res.status(400).json({ error: 'prompt or problem required' })
     }
 
-    // Auto fetch weather if location given
+    // Normalize input — works for both tap (structured) and voice (text)
+    const normalizedText = normalizeInput(
+      prompt || { crop, problem, location }
+    )
+
+    // Always extract parameters from text for better crop detection
+    const extractedParams = extractParameters(normalizedText)
+
+    // Auto fetch weather
     let weatherInfo = weather
     if (!weatherInfo && location) {
       try {
@@ -25,16 +33,25 @@ router.post('/', async (req, res, next) => {
       }
     }
 
-    const fullPrompt = buildPrompt({ prompt, crop, problem, location, weather: weatherInfo })
+    const fullPrompt = buildPrompt({
+      prompt: normalizedText,
+      crop,
+      problem,
+      location,
+      weather: weatherInfo
+    })
     const systemPrompt = buildSystemPrompt()
 
     let response = null
     let source = null
+    let ruleDetails = null
 
     // Layer 1 — NVIDIA
     try {
+      console.log('Trying NVIDIA...')
       response = await callNvidia(fullPrompt, systemPrompt)
       source = 'nvidia'
+      console.log('NVIDIA success')
     } catch (e) {
       console.log('NVIDIA failed:', e.message)
     }
@@ -42,26 +59,52 @@ router.post('/', async (req, res, next) => {
     // Layer 2 — Groq
     if (!response) {
       try {
+        console.log('Trying Groq...')
         response = await callOpenAI(fullPrompt, systemPrompt)
         source = 'groq'
+        console.log('Groq success')
       } catch (e) {
         console.log('Groq failed:', e.message)
       }
     }
 
-    // Layer 3 — Rule Engine
+    // Layer 3 — Smart Rule Engine
     if (!response) {
-      console.log('Using Rule Engine...')
-      const ruleResult = getRuleEngineResponse(fullPrompt)
+      console.log('Using Smart Rule Engine...')
+      const ruleResult = getRuleEngineResponse(normalizedText)
       response = ruleResult.response
       source = 'rule_engine'
+      ruleDetails = {
+        confidence: ruleResult.confidence,
+        confidenceLabel: ruleResult.confidenceLabel,
+        extractedCrop: ruleResult.extractedCrop,
+        extractedCropHindi: ruleResult.extractedCropHindi,
+        extractedSymptom: ruleResult.extractedSymptom,
+        action: ruleResult.action,
+        cost: ruleResult.cost,
+        urgency: ruleResult.urgency,
+        urgencyHindi: ruleResult.urgencyHindi,
+      }
     }
+
+    // Resolve crop name — from request, extracted params, or rule engine
+    const resolvedCrop =
+      crop ||
+      extractedParams.cropHindi ||
+      ruleDetails?.extractedCropHindi ||
+      'Pata nahi'
 
     return res.json({
       response,
       source,
-      crop: crop || 'unknown',
+      crop: resolvedCrop,
+      extractedCrop: extractedParams.crop,
+      extractedCropHindi: extractedParams.cropHindi,
+      extractedSymptom: extractedParams.symptom,
+      extractedSymptomHindi: extractedParams.symptomHindi,
       weatherInfo,
+      ruleDetails,
+      inputType: inputType || 'text',
       timestamp: new Date().toISOString()
     })
 
@@ -83,7 +126,7 @@ router.get('/weather', async (req, res, next) => {
 })
 
 function buildPrompt({ prompt, crop, problem, location, weather }) {
-  if (prompt) return prompt
+  if (prompt && !crop) return prompt
   return `Kisan ki samasya:
 - Fasal: ${crop || 'pata nahi'}
 - Dikkat: ${problem || 'pata nahi'}

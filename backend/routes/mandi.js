@@ -4,10 +4,12 @@ const { getMandiPrices, calculateNetEarning, getDistance } = require('../service
 const { callNvidia } = require('../services/nvidia')
 const { callOpenAI } = require('../services/openai')
 
+const MAX_REALISTIC_DISTANCE_KM = 150
+
 // POST /api/mandi
 router.post('/', async (req, res, next) => {
   try {
-    const { crop, quantity, state, location } = req.body
+    const { crop, quantity, state, location, offline } = req.body
 
     if (!crop) {
       return res.status(400).json({ error: 'crop is required' })
@@ -15,9 +17,16 @@ router.post('/', async (req, res, next) => {
 
     const qty = parseFloat(quantity) || 1
     const stateStr = state || 'Maharashtra'
+    const forceOffline = offline === true
 
-    const { data: prices, fromCache, mock } = await getMandiPrices(crop, stateStr)
+    // Fetch prices — live or offline
+    const { data: prices, fromCache, source: dataSource, isOffline } = await getMandiPrices(
+      crop,
+      stateStr,
+      forceOffline
+    )
 
+    // Calculate net earnings for each mandi
     const mandisWithNet = prices.map(mandi => {
       const distance = getDistance(mandi.mandi)
       const { grossEarning, transportCost, netEarning } = calculateNetEarning(
@@ -35,12 +44,17 @@ router.post('/', async (req, res, next) => {
       }
     }).sort((a, b) => b.netEarning - a.netEarning)
 
-    const best = mandisWithNet[0]
-    const worst = mandisWithNet[mandisWithNet.length - 1]
+    // ── DISTANCE FILTER ──
+    // Prefer mandis within 150km — realistic for a marginal farmer
+    const nearbyMandis = mandisWithNet.filter(m => m.distance <= MAX_REALISTIC_DISTANCE_KM)
+    const bestMandis = nearbyMandis.length > 0 ? nearbyMandis : mandisWithNet
+
+    const best = bestMandis[0]
+    const worst = bestMandis[bestMandis.length - 1]
 
     // AI sell timing advice
     let sellAdvice = null
-    const advicePrompt = `Crop: ${crop}, Best mandi: ${best?.mandi} at ₹${best?.pricePerKg}/kg, Quantity: ${qty} quintal, State: ${stateStr}. In 2 sentences of simple Hindi — should farmer sell today or wait? Consider seasonal trends.`
+    const advicePrompt = `Fasal: ${crop}, Sabse achhi mandi: ${best?.mandi} ₹${best?.pricePerKg}/kg, Quantity: ${qty} quintal, State: ${stateStr}. 2 sentences simple Hindi mein — aaj becho ya ruko?`
 
     try {
       sellAdvice = await callNvidia(advicePrompt)
@@ -48,17 +62,22 @@ router.post('/', async (req, res, next) => {
       try {
         sellAdvice = await callOpenAI(advicePrompt)
       } catch {
-        sellAdvice = `${best?.mandi} mandi mein aaj becho — yeh sabse achha rate hai. Zyada intezaar se rate kam ho sakta hai.`
+        sellAdvice = `${best?.mandi} mandi mein aaj becho — yeh sabse achha rate hai. Zyada intezaar karne se rate kam ho sakta hai.`
       }
     }
 
+    // ₹27/day impact calculation
     const extraEarning = best && worst ? best.netEarning - worst.netEarning : 0
     const daysOfIncome = Math.round(extraEarning / 27)
+
+    // Distance warning for any mandi over 150km
+    const hasDistantMandis = mandisWithNet.some(m => m.distance > MAX_REALISTIC_DISTANCE_KM)
 
     return res.json({
       crop,
       quantity: qty,
-      mandis: mandisWithNet,
+      mandis: bestMandis,           // Only nearby mandis shown
+      allMandis: mandisWithNet,     // Full list if needed
       best: {
         ...best,
         recommendation: `${best?.mandi} mandi mein becho — sabse zyada ₹${best?.netEarning} milega`
@@ -67,8 +86,13 @@ router.post('/', async (req, res, next) => {
       impactLine: extraEarning > 0
         ? `Sabse kharab mandi se ₹${extraEarning} zyaada milega — aapki ${daysOfIncome} din ki extra kamai`
         : null,
+      dataSource,
+      isOffline: isOffline || false,
+      offlineNote: isOffline
+        ? 'Internet nahi tha — approximate prices diye hain. Online hone par live prices milenge.'
+        : null,
+      hasDistantMandisFiltered: hasDistantMandis,
       fromCache,
-      mock: mock || false,
       timestamp: new Date().toISOString()
     })
 
@@ -80,11 +104,15 @@ router.post('/', async (req, res, next) => {
 // GET /api/mandi/prices?crop=wheat&state=Maharashtra
 router.get('/prices', async (req, res, next) => {
   try {
-    const { crop, state } = req.query
+    const { crop, state, offline } = req.query
     if (!crop) return res.status(400).json({ error: 'crop query param required' })
 
-    const { data, fromCache } = await getMandiPrices(crop, state || 'Maharashtra')
-    res.json({ data, fromCache, count: data.length })
+    const { data, fromCache, source } = await getMandiPrices(
+      crop,
+      state || 'Maharashtra',
+      offline === 'true'
+    )
+    res.json({ data, fromCache, source, count: data.length })
   } catch (err) {
     next(err)
   }
