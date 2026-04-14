@@ -1,0 +1,20 @@
+{
+  "crop_problems": {
+    "yellow_leaves": {
+      "hindi": "Patte peele ho rahe hain to nitrogen ki kami hai. Urea spray karo 2% — ₹80/acre.",
+      "action": "Urea spray",
+      "cost": 80
+    },
+    "pests": {
+      "hindi": "Keede ke liye Chlorpyrifos 2ml/litre paani mein spray karo — ₹100/acre.",
+      "action": "Chlorpyrifos spray",
+      "cost": 100
+    },
+    "wilting": {
+      "hindi": "Fasal sukh rahi hai — turant sinchai karo. Drip use karo.",
+      "action": "Sinchai",
+      "cost": 0
+    }
+  },
+  "helpline": "1800-180-1551"
+}

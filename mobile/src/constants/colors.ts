@@ -1,0 +1,17 @@
+export const colors = {
+  primary: '#4a7c4a',
+  primaryLight: '#6aab6a',
+  primaryDark: '#2d5a2d',
+  primaryBg: '#f0f4f0',
+  background: '#f5f7f5',
+  white: '#ffffff',
+  textDark: '#1a2e1a',
+  textMid: '#4a6a4a',
+  textLight: '#8aaa8a',
+  border: 'rgba(74,124,74,0.15)',
+  cardBg: '#ffffff',
+  offlineRed: '#c0392b',
+  warningYellow: '#e6a817',
+  onlineGreen: '#4a7c4a',
+  tagBg: 'rgba(74,124,74,0.08)',
+}

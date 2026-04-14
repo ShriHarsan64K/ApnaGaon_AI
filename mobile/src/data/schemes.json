@@ -1,0 +1,42 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": "PM-KISAN",
+    "amount": "₹6,000/saal",
+    "desc": "Seedha bank mein 3 kistoon mein paisa milta hai",
+    "eligibility": { "maxLandAcres": 5, "bankAccount": true },
+    "documents": ["Aadhar Card", "Bank Passbook", "Khasra/Khatauni"],
+    "applyAt": "CSC Centre ya pmkisan.gov.in",
+    "emoji": "💰"
+  },
+  {
+    "id": "pmfby",
+    "name": "PMFBY — Fasal Bima",
+    "amount": "Fasal nuksan pe muavza",
+    "desc": "Baarish, sookha ya aandhi se fasal kharab ho to paisa milta hai",
+    "eligibility": { "bankAccount": true },
+    "documents": ["Aadhar", "Bank Account", "Bhumiswami Praman"],
+    "applyAt": "Nazdiki bank ya bima company",
+    "emoji": "🛡️"
+  },
+  {
+    "id": "kcc",
+    "name": "Kisan Credit Card",
+    "amount": "₹3 lakh tak — 4% byaaj",
+    "desc": "Khad beej aur dawai kharidne ke liye sasta loan",
+    "eligibility": { "bankAccount": true },
+    "documents": ["Aadhar", "Zameen ke kagaz", "Photo"],
+    "applyAt": "Nazdiki bank",
+    "emoji": "💳"
+  },
+  {
+    "id": "pm-kusum",
+    "name": "PM-KUSUM",
+    "amount": "Solar pump pe 90% subsidy",
+    "desc": "Khet ki sinchai ke liye solar pump lagao",
+    "eligibility": {},
+    "documents": ["Aadhar", "Zameen ka praman", "Bank Account"],
+    "applyAt": "State agriculture department",
+    "emoji": "☀️"
+  }
+]
