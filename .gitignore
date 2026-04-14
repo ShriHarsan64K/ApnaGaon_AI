@@ -31,3 +31,12 @@ Thumbs.db
 
 # React Native
 mobile/__tests__/
+mobile/node_modules/
+mobile/ios/
+mobile/.bundle/
+mobile/.env
+mobile/__tests__/
+mobile/android/app/build/
+mobile/android/build/
+mobile/android/.gradle/
+mobile/package-lock.json
