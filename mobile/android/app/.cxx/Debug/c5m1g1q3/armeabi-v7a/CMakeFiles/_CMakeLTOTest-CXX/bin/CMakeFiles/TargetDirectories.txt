@@ -1,4 +1,0 @@
-/home/harsan/Projects/ApnaGaon-AI/mobile/android/app/.cxx/Debug/c5m1g1q3/armeabi-v7a/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/foo.dir
-/home/harsan/Projects/ApnaGaon-AI/mobile/android/app/.cxx/Debug/c5m1g1q3/armeabi-v7a/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/boo.dir
-/home/harsan/Projects/ApnaGaon-AI/mobile/android/app/.cxx/Debug/c5m1g1q3/armeabi-v7a/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/edit_cache.dir
-/home/harsan/Projects/ApnaGaon-AI/mobile/android/app/.cxx/Debug/c5m1g1q3/armeabi-v7a/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/rebuild_cache.dir
